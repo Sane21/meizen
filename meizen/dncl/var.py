@@ -11,7 +11,7 @@ class Variable:
     __name: str
     __address: str
 
-    def __int__(self, name_type: NameType, name: str, address: str):
+    def __init__(self, name_type: NameType, name: str, address: str):
         """
         コンストラクタ
         :param name_type: 変数型名, NameType型
