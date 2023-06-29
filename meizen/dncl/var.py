@@ -1,4 +1,4 @@
-from type import NameType
+from .type import NameType
 
 
 class Variable:
