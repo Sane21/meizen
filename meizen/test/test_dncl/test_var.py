@@ -1,4 +1,5 @@
 from meizen.dncl.var import Variable
+from meizen.dncl.var import VariableTable
 from meizen.dncl.type import NameType
 
 
@@ -9,3 +10,9 @@ def test_variable():
     assert v.name_type == NameType.CONST
     v.address = "1"
     assert v.name_type == NameType.VARIABLE
+
+def test_vartable():
+    const_table = VariableTable(NameType.CONST)
+    var_table = VariableTable(NameType.VARIABLE)
+    array_table = VariableTable(NameType.ARRAY)
+
