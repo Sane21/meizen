@@ -1,5 +1,4 @@
-from meizen.dncl.var import Variable
-from meizen.dncl.var import VariableTable
+from meizen.dncl.var import Variable, VariableTable, ConstTable
 from meizen.dncl.type import NameType
 
 
@@ -17,3 +16,14 @@ def test_var_table():
     assert not var_table.is_exit_key("hoge")
     var_table.append("hoge", "000")
     assert var_table.is_exit_key("hoge")
+    assert var_table.get("hoge").name_type == NameType.VARIABLE
+    var_table.append("fuga", "001")
+    var_table.append("piyo", "002")
+    assert var_table.get("fuga").address == "001"
+    assert not var_table.get("fuga").address == var_table.get("piyo").address
+
+
+def test_const_table():
+    table = ConstTable()
+    table.append("HOGE", "000")
+    assert table.get("HOGE").name_type == NameType.CONST
