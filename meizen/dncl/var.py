@@ -10,9 +10,9 @@ class Variable:
     """
     __name_type: NameType
     __name: str
-    __address: str
+    __address: int
 
-    def __init__(self, name_type: NameType, name: str, address: str):
+    def __init__(self, name_type: NameType, name: str, address: int):
         """
         コンストラクタ
         :param name_type: 変数型名, NameType型
@@ -33,11 +33,11 @@ class Variable:
         return self.__name_type
 
     @property
-    def address(self) -> str:
+    def address(self) -> int:
         return self.__address
 
     @address.setter
-    def address(self, value: str) -> None:
+    def address(self, value: int) -> None:
         if not self.name_type == NameType.CONST:
             self.__address = value
 
@@ -85,7 +85,7 @@ class Table(ABC):
         if self.is_exit_key(name):
             return self.__var_list.get(name)
 
-    def append(self, name: str, address: str):
+    def append(self, name: str, address: int):
         """変数の追加登録
         同名の変数が存在しない場合のみ追加処理を行う
         :param name: 変数名(str)
