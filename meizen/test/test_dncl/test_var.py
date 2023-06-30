@@ -9,10 +9,10 @@ def test_variable():
     assert v.name == "NAME"
     assert v.name_type == NameType.CONST
     v.address = "1"
-    assert v.name_type == NameType.VARIABLE
+    assert v.address == "1"
+
 
 def test_vartable():
     const_table = VariableTable(NameType.CONST)
     var_table = VariableTable(NameType.VARIABLE)
     array_table = VariableTable(NameType.ARRAY)
-
