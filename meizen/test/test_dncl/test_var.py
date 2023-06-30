@@ -12,7 +12,8 @@ def test_variable():
     assert v.address == "1"
 
 
-def test_vartable():
-    const_table = VariableTable(NameType.CONST)
-    var_table = VariableTable(NameType.VARIABLE)
-    array_table = VariableTable(NameType.ARRAY)
+def test_var_table():
+    var_table = VariableTable()
+    assert not var_table.is_exit_key("hoge")
+    var_table.append("hoge", "000")
+    assert var_table.is_exit_key("hoge")
