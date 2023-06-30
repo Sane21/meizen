@@ -1,4 +1,5 @@
 from .type import NameType
+from abc import ABC, abstractmethod
 
 
 class Variable:
@@ -40,16 +41,28 @@ class Variable:
         self.__address = value
 
 
-class VariableTable:
+class Table(ABC):
     """
-    変数,定数,配列の一覧を管理するクラス
+    変数の一覧を管理するクラス
     """
     __var_list: dict
     __name_type: NameType
 
-    def __init__(self, name_type: NameType):
+    def __init__(self):
         self.__var_list = dict()
-        self.__type = name_type
+        self._definite_name_type()
+
+    @property
+    def _name_type(self) -> NameType:
+        return self.__name_type
+
+    @_name_type.setter
+    def _name_type(self, value: NameType) -> None:
+        self.__name_type = value
+
+    @abstractmethod
+    def _definite_name_type(self):
+        pass
 
     def is_exit_key(self, name: str) -> bool:
         """
@@ -80,3 +93,27 @@ class VariableTable:
         """
         if not self.is_exit_key(name):
             self.__var_list[name] = Variable(name_type=self.__name_type, name=name, address=address)
+
+
+class VariableTable(Table, ABC):
+    """
+    変数の一覧を保持するTableクラス
+    """
+    def _definite_name_type(self):
+        self._name_type = NameType.VARIABLE
+
+
+class ConstTable(Table, ABC):
+    """
+    定数の一覧を保持するTableクラス
+    """
+    def _definite_name_type(self):
+        self._name_type = NameType.CONST
+
+
+class ArrayTable(Table, ABC):
+    """
+    配列の一覧を保持するTableクラス
+    """
+    def _definite_name_type(self):
+        self._name_type = NameType.ARRAY
