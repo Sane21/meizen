@@ -95,25 +95,28 @@ class Table(ABC):
             self.__var_list[name] = Variable(name_type=self.__name_type, name=name, address=address)
 
 
-class VariableTable(Table, ABC):
+class VariableTable(Table):
     """
     変数の一覧を保持するTableクラス
     """
+
     def _definite_name_type(self):
         self._name_type = NameType.VARIABLE
 
 
-class ConstTable(Table, ABC):
+class ConstTable(Table):
     """
     定数の一覧を保持するTableクラス
     """
+
     def _definite_name_type(self):
         self._name_type = NameType.CONST
 
 
-class ArrayTable(Table, ABC):
+class ArrayTable(Table):
     """
     配列の一覧を保持するTableクラス
     """
+
     def _definite_name_type(self):
         self._name_type = NameType.ARRAY
