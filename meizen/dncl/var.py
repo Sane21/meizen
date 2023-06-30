@@ -38,7 +38,8 @@ class Variable:
 
     @address.setter
     def address(self, value: str) -> None:
-        self.__address = value
+        if not self.name_type == NameType.CONST:
+            self.__address = value
 
 
 class Table(ABC):
