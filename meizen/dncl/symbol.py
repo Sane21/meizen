@@ -2,7 +2,11 @@ from enum import StrEnum
 
 
 class Symbol(StrEnum):
+    # 初期値
     NULL = None
+    # 解析中
+    ON_ANALYSE = ""
+
     # 構文系
     IF = "もし"
     THEN = "ならば"
@@ -57,6 +61,8 @@ class Symbol(StrEnum):
     R_BRACKET = "]"
     QUOTATION = "\""
     COMMA = ","
+    DOT = "."
+    SPACE = " "
 
     # 値系
     INTEGER = "int"
