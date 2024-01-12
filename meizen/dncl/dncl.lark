@@ -1,17 +1,20 @@
 program         : { block }
 block           : { statement }
-statement       : declare
-declare         : (const_declare | var_declare) return
+statement       : declare_statement
+
+
+declare_statement : declare return
+declare         : const_declare | var_declare
 const_declare   : const_name "=" constant
 var_declare     : var_name "=" constant
 array_declare   : array_name "=" "[" [(constant ",")* constant] "]"
 constant        : number | string | bool
 
 
-
 const_name      : UCASE_LETTER (UCASE_LETTER | "_")*
 var_name        : LCASE_LETTER (LCASE_LETTER | "_")*
 array_name      : UCASE_LETTER (LCASE_LETTER | "_")*
+
 
 number          : integer | float
 integer         : ["-"]INT
