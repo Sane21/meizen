@@ -232,6 +232,24 @@ def compile_code(path: str, filename: str):
                                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
+            elif current_char == "\"":
+                while next_char != "\"" or pos+1 != num:
+                    pos += 1
+                    current_char = line[pos]
+                    next_char = line[pos + 1]
+                    word += current_char
+                if next_char == "\"":
+                    pos, current_char, next_char = next_to(line=line, pos=pos)
+                    word += current_char
+                    if word == "":
+                        symbol = Symbol.OR
+                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                              symbol=symbol)
+                    else:
+                        symbol = Symbol.ERROR
+                else:
+                    symbol = Symbol.ERROR
+
             # 残りは数値系、文字列、変数名で分けて、変数名のうち、予約語に該当するものは予約語へ
 
             # 全角、半角の変換処理の導入、変数宣言の寛容さを要検討
