@@ -117,7 +117,7 @@ def compile_code(path: str, filename: str):
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if next_char == "=":
-                        if pos+1 == num:
+                        if pos + 1 == num:
                             if word == "//":
                                 symbol = Symbol.DIV_INT
                                 word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
@@ -233,7 +233,7 @@ def compile_code(path: str, filename: str):
                     else:
                         symbol = Symbol.ERROR
             elif current_char == "\"":
-                while next_char != "\"" or pos+1 != num:
+                while next_char != "\"" and pos + 1 != num:
                     pos += 1
                     current_char = line[pos]
                     next_char = line[pos + 1]
@@ -241,14 +241,48 @@ def compile_code(path: str, filename: str):
                 if next_char == "\"":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
-                    if word == "":
-                        symbol = Symbol.OR
+                    if word[0] == "\"" and word[len(word) - 1] == "\"":
+                        symbol = Symbol.STRING
                         word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
                                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.ERROR
+            elif is_number_character(current_char):
+                while is_number_character(next_char) and pos + 1 != num:
+                    pos += 1
+                    current_char = line[pos]
+                    next_char = line[pos + 1]
+                    word += current_char
+                if next_char == ".":
+                    pos += 1
+                    current_char = line[pos]
+                    next_char = line[pos + 1]
+                    word += current_char
+                    if is_number_character(next_char):
+                        while is_number_character(next_char) and pos + 1 != num:
+                            pos += 1
+                            current_char = line[pos]
+                            next_char = line[pos + 1]
+                            word += current_char
+                        if is_number(word=word):
+                            symbol = Symbol.FLOAT
+                            word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                                  symbol=symbol)
+                        else:
+                            symbol = Symbol.ERROR
+                    else:
+                        symbol = Symbol.ERROR
+                else:
+                    if is_number(word=word):
+                        symbol = Symbol.INTEGER
+                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                              symbol=symbol)
+                    else:
+                        symbol = Symbol.ERROR
+
+            # ""の字句解析がOKだったら、コピペで''も同様にelifで書く
 
             # 残りは数値系、文字列、変数名で分けて、変数名のうち、予約語に該当するものは予約語へ
 
@@ -271,9 +305,23 @@ def append(code_word: list, code_symbol: list, word: str, symbol: Symbol) -> (st
     return "", Symbol.NULL
 
 
-# 次に文字があるかどうか
-def check_next(pos: int, num: int) -> bool:
-    if pos + 1 == num:
+# 文字が数値かどうかを判別
+def is_number_character(character: str) -> bool:
+    result = False
+    if character == "0" or character == "1" or character == "2" or character == "3" \
+            or character == "4" or character == "5" or character == "6" or character == "7" \
+            or character == "8" or character == "9":
+        result = True
+    else:
+        result = False
+    return result
+
+
+# 文字列が数値かどうかを判別
+def is_number(word: str) -> bool:
+    try:
+        float(word)
+    except ValueError:
         return False
     else:
         return True
