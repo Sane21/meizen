@@ -21,6 +21,7 @@ class Symbol(StrEnum):
     FOR_INC = "ずつ増やしながら繰り返す"
     FOR_DEC = "ずつ減らしながら繰り返す"
     FUNCTION = "関数"
+    PRINT = "表示する"
 
     # 真偽値系
     TRUE = "True"
@@ -68,6 +69,7 @@ class Symbol(StrEnum):
     INTEGER = "int"
     FLOAT = "float"
     STRING = "str"
+    NAME = "変数名"
     CONST_NAME = "NAME"
     ARRAY_NAME = "Name"
     VAR_NAME = "name"
@@ -76,5 +78,5 @@ class Symbol(StrEnum):
     # 段落系
     RETURN = "\n"
     INDENT = "\t"
-    EOF = "eof"
+    EOF = "\0"
 
