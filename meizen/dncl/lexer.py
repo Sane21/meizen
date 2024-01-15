@@ -1,5 +1,5 @@
 from .io import load, write
-from symbol import Symbol
+from .symbol import Symbol
 
 
 # トランスコンパイル
@@ -7,8 +7,11 @@ def compile_code(path: str, filename: str):
     read_file_path = path + filename + ".dncl"
     write_file_path = path + filename + ".py"
     code_word, code_symbol = lexical_analyse(path=read_file_path)
+    print("字句解析完了")
     code_list = parse(code_word=code_word, code_symbol=code_symbol)
+    print("構文解析完了")
     write(path=write_file_path, code_list=code_list)
+    print("書き込み完了")
 
 
 # 字句解析
@@ -16,22 +19,33 @@ def lexical_analyse(path: str) -> (list, list):
     code_list: list = load(path=path)
     code_word: list = []
     code_symbol: list = []
+    len_line = len(code_list)  # 行数
+    count_line = 0  # 行数のカウント
     for code in code_list:
+        count_line += 1
         line = list(code)  # 一行の文字ごとのリスト
         num = len(line)  # 行の文字数
         pos = -1  # 見ているlineの場所
 
-        while pos != num:
+        while pos + 1 != num:
             pos += 1
+
             # 読み取り情報の初期化
             symbol = Symbol.NULL  # 切り出した単語の種類
             current_char = line[pos]  # 現在の頭文字
-            next_char = line[pos + 1]  # 次の文字
             word = current_char  # 現在の単語
+            next_char = ""
+            if current_char == "\n":
+                symbol = Symbol.RETURN
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                break
+            if not len_line == count_line or pos == num:
+                next_char = line[pos + 1]  # 次の文字
 
             if current_char == "\n":
                 symbol = Symbol.RETURN
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                break
             elif current_char == " ":
                 symbol = Symbol.SPACE
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
@@ -55,6 +69,12 @@ def lexical_analyse(path: str) -> (list, list):
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "]":
                 symbol = Symbol.R_BRACKET
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+            elif current_char == ":":
+                symbol = Symbol.CORON
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+            elif current_char == ";":
+                symbol = Symbol.SEMI_CORON
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "+":
                 if next_char == "=":
@@ -294,12 +314,11 @@ def lexical_analyse(path: str) -> (list, list):
                         symbol = Symbol.ERROR
 
             if symbol != Symbol.NULL:
-                pos += 1
                 continue
 
             # ここから下は単語か予約語になる
-            while is_symbol_head_character(next_char) and pos + 1 != num:
-                pos, current_char, next_char = next_to(line=line, pos=pos)
+            while not is_symbol_head_character(next_char) and pos + 1 != num:
+                pos, current_char, next_char = next_to(line=list(line), pos=pos)
                 word += current_char
 
             if word == str(Symbol.IF):
@@ -375,7 +394,7 @@ def lexical_analyse(path: str) -> (list, list):
                 append(code_word=code_word, code_symbol=code_symbol, word=word,
                        symbol=symbol)
             else:
-                if str.isalpha(word):
+                if is_name(word=word):
                     symbol = Symbol.NAME
                     append(code_word=code_word, code_symbol=code_symbol, word=word,
                            symbol=symbol)
@@ -383,38 +402,45 @@ def lexical_analyse(path: str) -> (list, list):
                     symbol = Symbol.ERROR
 
             if symbol == Symbol.ERROR:
-                print("ERROR : word is " + word)
-        print("read : " + code)
+                print("ERROR : word[" + word + "], pos[" + str(
+                    pos) + "], cc[" + current_char + "], nc[" + next_char + "]")
     return code_word, code_symbol
 
 
 # 構文解析
 def parse(code_word: list, code_symbol: list) -> list:
-    code_list = []
-    code_line = ""
-    word_num = len(code_word)
-    symbol_num = len(code_symbol)
+    code_list: list[str] = []  # 各行を格納するリスト
+    word_num = len(code_word)  # 単語の格納数
+    symbol_num = len(code_symbol)  # 記号の格納数
+    code_line: str = ""  # 見ている行
     if word_num != symbol_num:
         return []
-    pos = -1
-    while pos != word_num:
+
+    pos = -1  # 一覧の現在見ている場所
+    while not pos+1 == word_num:
         pos += 1
         if code_symbol[pos] == Symbol.RETURN:
-            code_list += code_line
+            print(code_line)
+            code_list.append(code_line)
+            code_line = ""
         elif code_symbol[pos] == Symbol.TRUE_JP:
             code_line += str(Symbol.TRUE)
         elif code_symbol[pos] == Symbol.FALSE_JP:
             code_line += str(Symbol.FALSE)
+        elif code_symbol[pos] == Symbol.PRINT:
+            code_line += "print"
         elif code_symbol[pos] == Symbol.IF:
             code_line += "if"
-            while pos+1 != word_num and code_symbol[pos+1] != Symbol.THEN:
+            while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.THEN:
                 pos += 1
                 code_line += code_word[pos]
+            pos += 1
         elif code_symbol[pos] == Symbol.ELIF:
             code_line += "elif"
-            while pos+1 != word_num and code_symbol[pos+1] != Symbol.THEN:
+            while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.THEN:
                 pos += 1
                 code_line += code_word[pos]
+            pos += 1
         elif code_symbol[pos] == Symbol.ELSE:
             code_line += "else"
         elif code_symbol[pos] == Symbol.WHILE:
@@ -448,11 +474,11 @@ def parse(code_word: list, code_symbol: list) -> list:
             code_line += " in range("
 
             num_l = ""
-            while pos+1 != word_num and code_symbol[pos+1] != Symbol.FOR_M:
+            while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.FOR_M:
                 pos += 1
                 num_l += code_word[pos]
             code_line += num_l
-            code_line = ", "
+            code_line += ", "
             pos += 1
 
             num_m = ""
@@ -460,22 +486,22 @@ def parse(code_word: list, code_symbol: list) -> list:
                 pos += 1
                 num_m += code_word[pos]
             code_line += num_m
-            code_line = ", "
+            code_line += ", "
             pos += 1
 
             num_n = ""
-            while pos + 1 != word_num and\
-                    (code_symbol[pos + 1] != Symbol.FOR_INC or code_symbol[pos + 1] != Symbol.FOR_DEC):
+            while pos + 1 != word_num and \
+                    (code_symbol[pos + 1] != Symbol.FOR_INC and code_symbol[pos + 1] != Symbol.FOR_DEC):
                 pos += 1
                 num_n += code_word[pos]
-            if code_symbol[pos+1] == Symbol.FOR_INC:
+            if code_symbol[pos + 1] == Symbol.FOR_INC:
                 code_line += num_n
-            elif code_symbol[pos+1] == Symbol.FOR_DEC:
+            elif code_symbol[pos + 1] == Symbol.FOR_DEC:
                 code_line += "-" + num_n
-            code_line = ")"
+            code_line += ")"
+            pos += 1
         else:
             code_line += code_word[pos]
-
     return code_list
 
 
@@ -488,7 +514,7 @@ def append(code_word: list, code_symbol: list, word: str, symbol: Symbol):
 def is_symbol_head_character(character: str) -> bool:
     result = False
     key_list = ["\n", " ", "\t", ",", ".", "(", ")", "[", "]", "+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|",
-                "\"", "\0", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                "\"", "\0", ";", ":", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     for key in key_list:
         if character == key:
             result = True
@@ -516,6 +542,17 @@ def is_number(word: str) -> bool:
         return False
     else:
         return True
+
+
+def is_name(word: str) -> bool:
+    result = False
+    for character in word:
+        if str.isalpha(character) or character == "_":
+            result = True
+        else:
+            result = False
+            break
+    return result
 
 
 # 次の文字に進む

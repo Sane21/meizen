@@ -3,7 +3,7 @@ from enum import StrEnum
 
 class Symbol(StrEnum):
     # 初期値
-    NULL = None
+    NULL = "NONE"
     # 解析中
     ON_ANALYSE = ""
 
@@ -64,6 +64,8 @@ class Symbol(StrEnum):
     COMMA = ","
     DOT = "."
     SPACE = " "
+    CORON = ":"
+    SEMI_CORON = ";"
 
     # 値系
     INTEGER = "int"
