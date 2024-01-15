@@ -1,58 +1,69 @@
-from .io import load
+from .io import load, write
 from symbol import Symbol
 
 
+# トランスコンパイル
 def compile_code(path: str, filename: str):
-    code_list: list = load(path=path + filename + ".dncl")
-    code_word = []
-    code_symbol = []
+    read_file_path = path + filename + ".dncl"
+    write_file_path = path + filename + ".py"
+    code_word, code_symbol = lexical_analyse(path=read_file_path)
+    code_list = parse(code_word=code_word, code_symbol=code_symbol)
+    write(path=write_file_path, code_list=code_list)
+
+
+# 字句解析
+def lexical_analyse(path: str) -> (list, list):
+    code_list: list = load(path=path)
+    code_word: list = []
+    code_symbol: list = []
     for code in code_list:
         line = list(code)  # 一行の文字ごとのリスト
         num = len(line)  # 行の文字数
-        pos = 0  # 見ているlineの場所
-        word = ""  # 切り出す単語の入れ先
-        current_char = ''
-        next_char = ''
-        symbol = Symbol.NULL  # 切り出した単語の種類
+        pos = -1  # 見ているlineの場所
 
-        while num != pos:
-            current_char = line[pos]
-            next_char = line[pos + 1]
-            word += current_char
+        while pos != num:
+            pos += 1
+            # 読み取り情報の初期化
+            symbol = Symbol.NULL  # 切り出した単語の種類
+            current_char = line[pos]  # 現在の頭文字
+            next_char = line[pos + 1]  # 次の文字
+            word = current_char  # 現在の単語
 
-            # if symbol == Symbol.NULL:
-            if current_char == " ":
+            if current_char == "\n":
+                symbol = Symbol.RETURN
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+            elif current_char == " ":
                 symbol = Symbol.SPACE
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "\t":
                 symbol = Symbol.INDENT
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == ",":
                 symbol = Symbol.COMMA
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == ".":
                 symbol = Symbol.DOT
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "(":
                 symbol = Symbol.L_PAREN
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == ")":
                 symbol = Symbol.R_PAREN
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "[":
                 symbol = Symbol.L_BRACKET
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "]":
                 symbol = Symbol.R_BRACKET
-                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "+":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "+=":
                         symbol = Symbol.ASSIGN_ADD
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 elif next_char == "+":
@@ -60,21 +71,21 @@ def compile_code(path: str, filename: str):
                     word += current_char
                     if word == "++":
                         symbol = Symbol.INCREMENT
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.ADD
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "-":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "-=":
                         symbol = Symbol.ASSIGN_SUB
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 elif next_char == "-":
@@ -82,35 +93,35 @@ def compile_code(path: str, filename: str):
                     word += current_char
                     if word == "--":
                         symbol = Symbol.DECREMENT
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.SUB
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "*":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "*=":
                         symbol = Symbol.ASSIGN_MUL
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.MUL
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == "/":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "/=":
                         symbol = Symbol.ASSIGN_DIV
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 elif next_char == "/":
@@ -120,8 +131,8 @@ def compile_code(path: str, filename: str):
                         if pos + 1 == num:
                             if word == "//":
                                 symbol = Symbol.DIV_INT
-                                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                                      symbol=symbol)
+                                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                       symbol=symbol)
                             else:
                                 symbol = Symbol.ERROR
                         else:
@@ -129,97 +140,97 @@ def compile_code(path: str, filename: str):
                             word += current_char
                             if word == "//=":
                                 symbol = Symbol.ASSIGN_DIV_INT
-                                word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                                      symbol=symbol)
+                                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                       symbol=symbol)
                     else:
                         if word == "//":
                             symbol = Symbol.DIV_INT
-                            word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                                  symbol=symbol)
+                            append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                   symbol=symbol)
                         else:
                             symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.DIV
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == "%":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "%=":
                         symbol = Symbol.ASSIGN_MOD
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.MOD
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == "=":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "==":
                         symbol = Symbol.EQUAL
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.ASSIGN
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == "<":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "<=":
                         symbol = Symbol.LESS_EQUAL
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.LESS
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == ">":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == ">=":
                         symbol = Symbol.GREAT_EQUAL
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.GREAT
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == "!":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "!=":
                         symbol = Symbol.NOT_EQUAL
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
                     symbol = Symbol.NOT
-                    word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                          symbol=symbol)
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
             elif current_char == "&":
                 if next_char == "&":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
                     word += current_char
                     if word == "&&":
                         symbol = Symbol.AND
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
             elif current_char == "|":
@@ -228,8 +239,8 @@ def compile_code(path: str, filename: str):
                     word += current_char
                     if word == "||":
                         symbol = Symbol.OR
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
             elif current_char == "\"":
@@ -243,8 +254,8 @@ def compile_code(path: str, filename: str):
                     word += current_char
                     if word[0] == "\"" and word[len(word) - 1] == "\"":
                         symbol = Symbol.STRING
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
                 else:
@@ -268,8 +279,8 @@ def compile_code(path: str, filename: str):
                             word += current_char
                         if is_number(word=word):
                             symbol = Symbol.FLOAT
-                            word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                                  symbol=symbol)
+                            append(code_word=code_word, code_symbol=code_symbol, word=word,
+                                   symbol=symbol)
                         else:
                             symbol = Symbol.ERROR
                     else:
@@ -277,32 +288,212 @@ def compile_code(path: str, filename: str):
                 else:
                     if is_number(word=word):
                         symbol = Symbol.INTEGER
-                        word, symbol = append(code_word=code_word, code_symbol=code_symbol, word=word,
-                                              symbol=symbol)
+                        append(code_word=code_word, code_symbol=code_symbol, word=word,
+                               symbol=symbol)
                     else:
                         symbol = Symbol.ERROR
 
-            # ""の字句解析がOKだったら、コピペで''も同様にelifで書く
+            if symbol != Symbol.NULL:
+                pos += 1
+                continue
 
-            # 残りは数値系、文字列、変数名で分けて、変数名のうち、予約語に該当するものは予約語へ
+            # ここから下は単語か予約語になる
+            while is_symbol_head_character(next_char) and pos + 1 != num:
+                pos, current_char, next_char = next_to(line=line, pos=pos)
+                word += current_char
 
-            # 全角、半角の変換処理の導入、変数宣言の寛容さを要検討
+            if word == str(Symbol.IF):
+                symbol = Symbol.IF
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.THEN):
+                symbol = Symbol.THEN
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.ELIF):
+                symbol = Symbol.ELIF
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.ELSE):
+                symbol = Symbol.ELSE
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.WHILE):
+                symbol = Symbol.WHILE
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.BREAK):
+                symbol = Symbol.BREAK
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.CONTINUE):
+                symbol = Symbol.CONTINUE
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FOR_L):
+                symbol = Symbol.FOR_L
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FOR_M):
+                symbol = Symbol.FOR_M
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FOR_N):
+                symbol = Symbol.FOR_N
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FOR_DEC):
+                symbol = Symbol.FOR_DEC
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FOR_INC):
+                symbol = Symbol.FOR_INC
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FUNCTION):
+                symbol = Symbol.FUNCTION
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.PRINT):
+                symbol = Symbol.PRINT
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.TRUE):
+                symbol = Symbol.TRUE
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FALSE):
+                symbol = Symbol.FALSE
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.TRUE_JP):
+                symbol = Symbol.TRUE_JP
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FALSE_JP):
+                symbol = Symbol.FALSE_JP
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            else:
+                if str.isalpha(word):
+                    symbol = Symbol.NAME
+                    append(code_word=code_word, code_symbol=code_symbol, word=word,
+                           symbol=symbol)
+                else:
+                    symbol = Symbol.ERROR
 
-            # elif symbol == Symbol.ON_ANALYSE:
-            pos, current_char, next_char = next_to(line=line, pos=pos)
+            if symbol == Symbol.ERROR:
+                print("ERROR : word is " + word)
+        print("read : " + code)
+    return code_word, code_symbol
 
-            # 行末の処理
-            word = ""
-            code_word.append("\n")
-            code_symbol.append(Symbol.RETURN)
-    code_data = ""
+
+# 構文解析
+def parse(code_word: list, code_symbol: list) -> list:
+    code_list = []
+    code_line = ""
+    word_num = len(code_word)
+    symbol_num = len(code_symbol)
+    if word_num != symbol_num:
+        return []
+    pos = -1
+    while pos != word_num:
+        pos += 1
+        if code_symbol[pos] == Symbol.RETURN:
+            code_list += code_line
+        elif code_symbol[pos] == Symbol.TRUE_JP:
+            code_line += str(Symbol.TRUE)
+        elif code_symbol[pos] == Symbol.FALSE_JP:
+            code_line += str(Symbol.FALSE)
+        elif code_symbol[pos] == Symbol.IF:
+            code_line += "if"
+            while pos+1 != word_num and code_symbol[pos+1] != Symbol.THEN:
+                pos += 1
+                code_line += code_word[pos]
+        elif code_symbol[pos] == Symbol.ELIF:
+            code_line += "elif"
+            while pos+1 != word_num and code_symbol[pos+1] != Symbol.THEN:
+                pos += 1
+                code_line += code_word[pos]
+        elif code_symbol[pos] == Symbol.ELSE:
+            code_line += "else"
+        elif code_symbol[pos] == Symbol.WHILE:
+            line = code_line
+            code_line = ""
+            is_while: bool = False
+            for character in line:
+                if character == "\t":
+                    code_line += character
+                else:
+                    if not is_while:
+                        code_line += "while "
+                        is_while = True
+                    else:
+                        code_line += character
+        elif code_symbol[pos] == Symbol.PRINT:
+            code_line += "print"
+        elif code_symbol[pos] == Symbol.FOR_L:
+            line = code_line
+            line_after_tab = ""  # i
+            code_line = ""
+
+            for character in line:
+                if character == "\t":
+                    code_line += character
+                else:
+                    line_after_tab += character
+
+            code_line += "for "
+            code_line += line_after_tab
+            code_line += " in range("
+
+            num_l = ""
+            while pos+1 != word_num and code_symbol[pos+1] != Symbol.FOR_M:
+                pos += 1
+                num_l += code_word[pos]
+            code_line += num_l
+            code_line = ", "
+            pos += 1
+
+            num_m = ""
+            while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.FOR_N:
+                pos += 1
+                num_m += code_word[pos]
+            code_line += num_m
+            code_line = ", "
+            pos += 1
+
+            num_n = ""
+            while pos + 1 != word_num and\
+                    (code_symbol[pos + 1] != Symbol.FOR_INC or code_symbol[pos + 1] != Symbol.FOR_DEC):
+                pos += 1
+                num_n += code_word[pos]
+            if code_symbol[pos+1] == Symbol.FOR_INC:
+                code_line += num_n
+            elif code_symbol[pos+1] == Symbol.FOR_DEC:
+                code_line += "-" + num_n
+            code_line = ")"
+        else:
+            code_line += code_word[pos]
+
+    return code_list
 
 
 # 追加する
-def append(code_word: list, code_symbol: list, word: str, symbol: Symbol) -> (str, Symbol):
+def append(code_word: list, code_symbol: list, word: str, symbol: Symbol):
     code_word.append(word)
     code_symbol.append(symbol)
-    return "", Symbol.NULL
+
+
+def is_symbol_head_character(character: str) -> bool:
+    result = False
+    key_list = ["\n", " ", "\t", ",", ".", "(", ")", "[", "]", "+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|",
+                "\"", "\0", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    for key in key_list:
+        if character == key:
+            result = True
+            break
+    return result
 
 
 # 文字が数値かどうかを判別
@@ -333,8 +524,3 @@ def next_to(line: list, pos: int) -> (int, str, str):
     current_char = line[pos]
     next_char = line[pos + 1]
     return pos, current_char, next_char
-
-
-def format_code(symbol: Symbol, sentence: str) -> str:
-    code = sentence
-    return code
