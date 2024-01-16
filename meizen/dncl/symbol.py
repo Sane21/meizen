@@ -1,6 +1,3 @@
-from enum import StrEnum
-
-
 class Symbol:
     # 初期値
     NULL = "NONE"
