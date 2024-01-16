@@ -427,6 +427,8 @@ def parse(code_word: list, code_symbol: list) -> list:
             code_line += str(Symbol.TRUE)
         elif code_symbol[pos] == Symbol.FALSE_JP:
             code_line += str(Symbol.FALSE)
+        elif code_symbol[pos] == Symbol.FUNCTION:
+            code_line += "def"
         elif code_symbol[pos] == Symbol.PRINT:
             code_line += "print"
         elif code_symbol[pos] == Symbol.IF:
