@@ -10,10 +10,16 @@
 
 ## 使い方
 
+```
 pip install git+<https://github.com/Sane21/meizen.git>
+```
 
+```
 meizen.make(path, filename)
+```
 
 pathには読み取りたいDNCLファイルのあるフォルダを記述する
 filenameには読み取りたいDNCLファイルの名前を記述する ただし拡張子は不要
 実行すると、pathのフォルダ内にfilename.pyが生成される。元からある場合は上書きされる。
+
+meizen_sample.ipynb を参考
