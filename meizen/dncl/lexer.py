@@ -17,6 +17,10 @@ def compile_code(path: str, filename: str):
 # 字句解析
 def lexical_analyse(path: str) -> (list, list):
     code_list: list = load(path=path)
+    # ここから 最後の１行を構文解析できないことのケアとして空行を追加する処理
+    code_list[len(code_list) - 1] += "\n"
+    code_list.append("")
+    # ここまで 消しちゃだめ
     code_word: list = []
     code_symbol: list = []
     len_line = len(code_list)  # 行数
@@ -431,7 +435,7 @@ def parse(code_word: list, code_symbol: list) -> list:
         return []
 
     pos = -1  # 一覧の現在見ている場所
-    while not pos+1 == word_num:
+    while not pos + 1 == word_num:
         pos += 1
         if code_symbol[pos] == Symbol.RETURN:
             print(code_line)
