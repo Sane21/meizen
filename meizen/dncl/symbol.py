@@ -1,7 +1,7 @@
 from enum import StrEnum
 
 
-class Symbol(StrEnum):
+class Symbol:
     # 初期値
     NULL = "NONE"
     # 解析中
