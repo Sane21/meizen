@@ -11,6 +11,6 @@ def write(path: str, code_list: list[str]):
     file = open(path, 'w')
     for code in code_list:
         file.write(code+"\n")
-        print(code)
+        # print(code)
     file.close()
     return
