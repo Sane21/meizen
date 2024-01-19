@@ -446,9 +446,9 @@ def parse(code_word: list, code_symbol: list) -> list:
         elif code_symbol[pos] == Symbol.FALSE_JP:
             code_line += str(Symbol.FALSE)
         elif code_symbol[pos] == Symbol.DIV_JP:
-            code_line += "/"
+            code_line += "//"
         elif code_symbol[pos] == Symbol.ASSIGN_DIV_JP:
-            code_line += "/="
+            code_line += "//="
         elif code_symbol[pos] == Symbol.FUNCTION:
             code_line += "def"
         elif code_symbol[pos] == Symbol.PRINT:
