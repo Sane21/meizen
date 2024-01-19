@@ -51,8 +51,40 @@ def lexical_analyse(path: str) -> (list, list):
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
                 break
             elif current_char == " ":
-                symbol = Symbol.SPACE
-                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                # スペース4つでインデント判定
+                if next_char == " ":
+                    current_pos = pos
+                    current_word = word
+                    pos, current_char, next_char = next_to(line=line, pos=pos)
+                    word += current_char
+                    if next_char == " " and pos + 1 != num:
+                        pos, current_char, next_char = next_to(line=line, pos=pos)
+                        word += current_char
+                        if next_char == " " and pos + 1 != num:
+                            pos, current_char, next_char = next_to(line=line, pos=pos)
+                            word += current_char
+                            if word == "    ":
+                                word = "\t"
+                                symbol = Symbol.INDENT
+                                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                            else:
+                                pos = current_pos
+                                word = current_word
+                                symbol = Symbol.SPACE
+                                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                        else:
+                            pos = current_pos
+                            word = current_word
+                            symbol = Symbol.SPACE
+                            append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                    else:
+                        pos = current_pos
+                        word = current_word
+                        symbol = Symbol.SPACE
+                        append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+                else:
+                    symbol = Symbol.SPACE
+                    append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "\t":
                 symbol = Symbol.INDENT
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
@@ -431,6 +463,7 @@ def parse(code_word: list, code_symbol: list) -> list:
     word_num = len(code_word)  # 単語の格納数
     symbol_num = len(code_symbol)  # 記号の格納数
     code_line: str = ""  # 見ている行
+    tab_num: int = 0  # インデントの回数
     if word_num != symbol_num:
         return []
 
@@ -438,9 +471,15 @@ def parse(code_word: list, code_symbol: list) -> list:
     while not pos + 1 == word_num:
         pos += 1
         if code_symbol[pos] == Symbol.RETURN:
-            print(code_line)
-            code_list.append(code_line)
+            indent = ""
+            while tab_num > 0:
+                indent += "\t"
+                tab_num -= 1
+            tab_num = 0
+            code_list.append(indent + code_line)
             code_line = ""
+        elif code_symbol[pos] == Symbol.INDENT:
+            tab_num += 1
         elif code_symbol[pos] == Symbol.TRUE_JP:
             code_line += str(Symbol.TRUE)
         elif code_symbol[pos] == Symbol.FALSE_JP:
@@ -486,7 +525,6 @@ def parse(code_word: list, code_symbol: list) -> list:
             line = code_line
             line_after_tab = ""  # i
             code_line = ""
-
             for character in line:
                 if character == "\t":
                     code_line += character

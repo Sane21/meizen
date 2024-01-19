@@ -1,3 +1,5 @@
+from .sample import Maisu
+
 kakaku = 46
 min_maisu = 100
 for tsuri  in range( 1 ,  99 ,  1 ):

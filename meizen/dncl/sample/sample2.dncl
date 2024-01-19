@@ -1,3 +1,5 @@
+import .sample
+
 kakaku = 46
 min_maisu = 100
 tsuri を 0 から 99 まで 1 ずつ増やしながら繰り返す:

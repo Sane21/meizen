@@ -1,8 +1,9 @@
-Kouka = [1,5,10,50,100]
-kingaku = 46
-maisu = 0
-nokori = kingaku
-i を 4 から 0 まで1ずつ減らしながら繰り返す:
-    maisu = maisu + nokori ÷ Kouka[i]
-    nokori = nokori % Kouka[i]
-表示する(maisu)
+関数 Maisu():
+    Kouka = [1,5,10,50,100]
+    kingaku = 46
+    maisu = 0
+    nokori = kingaku
+    i を 4 から 0 まで1ずつ減らしながら繰り返す:
+        maisu = maisu + nokori ÷ Kouka[i]
+        nokori = nokori % Kouka[i]
+    表示する(maisu)
