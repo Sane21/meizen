@@ -8,7 +8,7 @@ def load(path: str) -> list:
 
 # 書き込み
 def write(path: str, code_list: list[str]):
-    file = open(path, 'w')
+    file = open(path, 'w', encoding="utf-8")
     for code in code_list:
         file.write(code+"\n")
         # print(code)
