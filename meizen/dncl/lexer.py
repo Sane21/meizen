@@ -607,13 +607,14 @@ def is_number(word: str) -> bool:
 
 
 def is_name(word: str) -> bool:
-    result = False
-    for character in word:
-        if str.isalpha(character) or character == "_":
-            result = True
-        else:
-            result = False
-            break
+    result = True
+    # result = False
+    # for character in word:
+    #     if str.isalpha(character) or character == "_":
+    #         result = True
+    #     else:
+    #         result = False
+    #         break
     return result
 
 
