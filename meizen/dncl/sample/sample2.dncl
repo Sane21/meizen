@@ -1,10 +1,10 @@
-from sample import Maisu
+from sample import 枚数
 
 kakaku = 46
 min_maisu = 100
 tsuri を 0 から 99 まで 1 ずつ増やしながら繰り返す:
     shiharai = kakaku + tsuri
-    maisu = Maisu(shiharai) + Maisu(tsuri)
+    maisu = 枚数(shiharai) + 枚数(tsuri)
     もし maisu < min_maisu ならば:
         maisu = maisu
 表示する(maisu)

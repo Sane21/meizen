@@ -7,7 +7,7 @@ i を 4 から 0 まで1ずつ減らしながら繰り返す:
     nokori = nokori % Kouka[i]
 表示する(maisu)
 
-関数 Maisu(kingaku):
+関数 枚数(kingaku):
     Kouka = [1,5,10,50,100]
     maisu = 0
     nokori = kingaku
