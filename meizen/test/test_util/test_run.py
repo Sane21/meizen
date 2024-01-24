@@ -14,4 +14,4 @@ def test_run_args():
     run_args(path=path, args=args)
 
 
-test_run_args()
+test_run()
