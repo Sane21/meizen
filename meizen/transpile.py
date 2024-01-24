@@ -1,4 +1,5 @@
 from .dncl.lexer import compile_code
+from .util.run import run
 
 
 def make(path: str, filename: str):
@@ -9,3 +10,8 @@ def make(path: str, filename: str):
     :return:
     """
     compile_code(path=path, filename=filename)
+
+
+def make_run(path: str, filename: str):
+    compile_code(path=path, filename=filename)
+    run(path=path + filename + ".py")

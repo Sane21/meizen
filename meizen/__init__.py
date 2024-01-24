@@ -1,3 +1,4 @@
-from .transpile import make
-from .display import print_if, print_for, print_while
-__all__ = ['make', 'print_while', 'print_for', 'print_if']
+from .display import print_while, print_for, print_if
+from .transpile import make, make_run
+
+__all__ = ['make','make_run', 'print_while', 'print_for', 'print_if']
