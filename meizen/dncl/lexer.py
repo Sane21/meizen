@@ -516,6 +516,7 @@ def parse(code_word: list, code_symbol: list) -> list:
                 else:
                     if not is_while:
                         code_line += "while "
+                        code_line += character
                         is_while = True
                     else:
                         code_line += character
