@@ -532,24 +532,24 @@ def parse(code_word: list, code_symbol: list) -> list:
                 else:
                     line_after_tab += character
 
-            code_line += "for "
-            code_line += line_after_tab
-            code_line += " in range("
+            code_line_l = "for "
+            code_line_l += line_after_tab
+            code_line_l += " in range("
 
             num_l = ""
             while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.FOR_M:
                 pos += 1
                 num_l += code_word[pos]
-            code_line += num_l
-            code_line += ", "
+            code_line_m = num_l
+            code_line_n = ", "
             pos += 1
 
             num_m = ""
             while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.FOR_N:
                 pos += 1
                 num_m += code_word[pos]
-            code_line += num_m
-            code_line += ", "
+            code_line_n += num_m
+            code_line_o = ", "
             pos += 1
 
             num_n = ""
@@ -558,9 +558,12 @@ def parse(code_word: list, code_symbol: list) -> list:
                 pos += 1
                 num_n += code_word[pos]
             if code_symbol[pos + 1] == Symbol.FOR_INC:
-                code_line += num_n
+                code_line_m += "+1"
+                code_line_o += num_n
             elif code_symbol[pos + 1] == Symbol.FOR_DEC:
-                code_line += "-" + num_n
+                code_line_n += "-1"
+                code_line_o += "-" + num_n
+            code_line = code_line_l + code_line_m + code_line_n + code_line_o
             code_line += ")"
             pos += 1
         else:
