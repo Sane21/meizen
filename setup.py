@@ -9,6 +9,7 @@ setup(
                 "students in Japan.",
     author="Keita Sanefuji",
     author_email="sane21.edu@gmail.com",
+    url="https://github.com/sane21/meizen",
     license="MIT",
     packages=find_packages()
 )
