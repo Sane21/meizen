@@ -558,7 +558,7 @@ def parse(code_word: list, code_symbol: list) -> list:
                 pos += 1
                 num_n += code_word[pos]
             if code_symbol[pos + 1] == Symbol.FOR_INC:
-                code_line_m += "+1"
+                code_line_n += "+1"
                 code_line_o += num_n
             elif code_symbol[pos + 1] == Symbol.FOR_DEC:
                 code_line_n += "-1"
