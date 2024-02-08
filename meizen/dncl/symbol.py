@@ -19,6 +19,7 @@ class Symbol:
     FOR_DEC = "ずつ減らしながら繰り返す"
     FUNCTION = "関数"
     PRINT = "表示する"
+    INPUT = "【外部からの入力】"
 
     # 真偽値系
     TRUE = "True"

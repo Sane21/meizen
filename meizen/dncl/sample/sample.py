@@ -1,5 +1,5 @@
 Kouka = [1,5,10,50,100]
-kingaku = 46
+kingaku = input("文字を入力してください")
 maisu = 0
 nokori = kingaku
 for i  in range( 4 ,  0 -1, -1):

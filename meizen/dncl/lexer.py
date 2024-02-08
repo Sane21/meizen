@@ -112,8 +112,8 @@ def lexical_analyse(path: str) -> (list, list):
             elif current_char == ";":
                 symbol = Symbol.SEMI_CORON
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
-            # 「」の処理について、このままだと内部がL_KAKKO_JP WORD R_KAKKO_JP になってるのでほんとはQUOTと同様の処理をしたいけど
-            # 一時的な急場を凌ぐ処理として変換だけはできるようにしておく。
+            # TODO 「」の処理について、このままだと内部がL_KAKKO_JP WORD R_KAKKO_JP になってるのでほんとはQUOTと同様の処理をしたいけど\
+            #  一時的な急場を凌ぐ処理として変換だけはできるようにしておく。
             elif current_char == "「":
                 symbol = Symbol.L_KAKKO_JP
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
@@ -451,6 +451,10 @@ def lexical_analyse(path: str) -> (list, list):
                 symbol = Symbol.FALSE_JP
                 append(code_word=code_word, code_symbol=code_symbol, word=word,
                        symbol=symbol)
+            elif word == str(Symbol.INPUT):
+                symbol = Symbol.INPUT
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
             else:
                 if is_name(word=word):
                     symbol = Symbol.NAME
@@ -504,6 +508,8 @@ def parse(code_word: list, code_symbol: list) -> list:
             code_line += "def"
         elif code_symbol[pos] == Symbol.PRINT:
             code_line += "print"
+        elif code_symbol[pos] == Symbol.INPUT:
+            code_line += "input(\"文字を入力してください\")"
         elif code_symbol[pos] == Symbol.IF:
             code_line += "if"
             while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.THEN:

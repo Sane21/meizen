@@ -1,5 +1,5 @@
 Kouka = [1,5,10,50,100]
-kingaku = 46
+kingaku = 【外部からの入力】
 maisu = 0
 nokori = kingaku
 i を 4 から 0 まで1ずつ減らしながら繰り返す:
