@@ -112,6 +112,14 @@ def lexical_analyse(path: str) -> (list, list):
             elif current_char == ";":
                 symbol = Symbol.SEMI_CORON
                 append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+            # 「」の処理について、このままだと内部がL_KAKKO_JP WORD R_KAKKO_JP になってるのでほんとはQUOTと同様の処理をしたいけど
+            # 一時的な急場を凌ぐ処理として変換だけはできるようにしておく。
+            elif current_char == "「":
+                symbol = Symbol.L_KAKKO_JP
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
+            elif current_char == "」":
+                symbol = Symbol.R_KAKKO_JP
+                append(code_word=code_word, code_symbol=code_symbol, word=word, symbol=symbol)
             elif current_char == "+":
                 if next_char == "=":
                     pos, current_char, next_char = next_to(line=line, pos=pos)
@@ -484,6 +492,10 @@ def parse(code_word: list, code_symbol: list) -> list:
             code_line += str(Symbol.TRUE)
         elif code_symbol[pos] == Symbol.FALSE_JP:
             code_line += str(Symbol.FALSE)
+        elif code_symbol[pos] == Symbol.L_KAKKO_JP:
+            code_line += str(Symbol.QUOTATION)
+        elif code_symbol[pos] == Symbol.R_KAKKO_JP:
+            code_line += str(Symbol.QUOTATION)
         elif code_symbol[pos] == Symbol.DIV_JP:
             code_line += "//"
         elif code_symbol[pos] == Symbol.ASSIGN_DIV_JP:
@@ -580,7 +592,7 @@ def append(code_word: list, code_symbol: list, word: str, symbol: Symbol):
 def is_symbol_head_character(character: str) -> bool:
     result = False
     key_list = ["\n", " ", "\t", ",", ".", "(", ")", "[", "]", "+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|",
-                "\"", "\0", ";", ":", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+                "\"", "\0", ";", ":", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "「", "」"]
     for key in key_list:
         if character == key:
             result = True

@@ -65,6 +65,8 @@ class Symbol:
     SPACE = " "
     CORON = ":"
     SEMI_CORON = ";"
+    L_KAKKO_JP = "「"
+    R_KAKKO_JP = "」"
 
     # 値系
     INTEGER = "int"
