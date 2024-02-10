@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='meizen',
-    version='0.1.15',
+    version='0.1.16',
     description="This package is designed to transcompile the Common Test Procedure Description Standard Language ("
                 "DNCL) established by the University Entrance Examination Center for the \"Information\" section of "
                 "the university entrance common test in Python. It aims to support the learning of high school "
