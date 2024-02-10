@@ -17,9 +17,16 @@ class Symbol:
     FOR_N = "まで"
     FOR_INC = "ずつ増やしながら繰り返す"
     FOR_DEC = "ずつ減らしながら繰り返す"
+
+    # 関数系
     FUNCTION = "関数"
     PRINT = "表示する"
     INPUT = "【外部からの入力】"
+    FUNC_LENGTH = "要素数"
+    FUNC_RANDOM = "乱数"
+    FUNC_INT = "整数"
+    FUNC_STR = "文字列"
+    FUNC_FLOAT = "少数"
 
     # 真偽値系
     TRUE = "True"

@@ -455,6 +455,22 @@ def lexical_analyse(path: str) -> (list, list):
                 symbol = Symbol.INPUT
                 append(code_word=code_word, code_symbol=code_symbol, word=word,
                        symbol=symbol)
+            elif word == str(Symbol.FUNC_LENGTH):
+                symbol = Symbol.FUNC_LENGTH
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FUNC_STR):
+                symbol = Symbol.FUNC_STR
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FUNC_INT):
+                symbol = Symbol.FUNC_INT
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
+            elif word == str(Symbol.FUNC_FLOAT):
+                symbol = Symbol.FUNC_FLOAT
+                append(code_word=code_word, code_symbol=code_symbol, word=word,
+                       symbol=symbol)
             else:
                 if is_name(word=word):
                     symbol = Symbol.NAME
@@ -510,6 +526,14 @@ def parse(code_word: list, code_symbol: list) -> list:
             code_line += "print"
         elif code_symbol[pos] == Symbol.INPUT:
             code_line += "input(\"文字を入力してください\")"
+        elif code_symbol[pos] == Symbol.FUNC_LENGTH:
+            code_line += "len"
+        elif code_symbol[pos] == Symbol.FUNC_INT:
+            code_line += "int"
+        elif code_symbol[pos] == Symbol.FUNC_STR:
+            code_line += "str"
+        elif code_symbol[pos] == Symbol.FUNC_FLOAT:
+            code_line += "float"
         elif code_symbol[pos] == Symbol.IF:
             code_line += "if"
             while pos + 1 != word_num and code_symbol[pos + 1] != Symbol.THEN:
