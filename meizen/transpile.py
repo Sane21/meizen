@@ -1,5 +1,5 @@
 from .dncl.lexer import compile_code
-from .util.run import run
+from .util.run import run as util_run
 
 
 def make(path: str, filename: str):
@@ -9,9 +9,17 @@ def make(path: str, filename: str):
     :param filename: 読み取るファイル名 (拡張子は除く)
     :return:
     """
+    build(path, filename)
+
+
+def build(path: str, filename: str):
     compile_code(path=path, filename=filename)
+
+
+def run(path: str, filename: str):
+    compile_code(path=path, filename=filename)
+    util_run(path=path + filename + ".py")
 
 
 def make_run(path: str, filename: str):
-    compile_code(path=path, filename=filename)
-    run(path=path + filename + ".py")
+    run(path, filename)
