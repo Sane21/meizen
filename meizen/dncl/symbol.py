@@ -52,6 +52,7 @@ class Symbol:
     DIV_INT = "//"
     MOD = "%"
     ASSIGN = "="
+    ASSIGN_ARROW = "←"
     ASSIGN_ADD = "+="
     ASSIGN_SUB = "-="
     ASSIGN_MUL = "*="
