@@ -9,7 +9,8 @@ def run(path: str) -> (str, str):
     :return: 標準出力結果, エラー出力結果
     """
     command = ["python", path]
-    return do(command=command)
+    result = do(command=command)
+    return result
 
 
 def run_args(path: str, args: list[str]):
@@ -22,7 +23,8 @@ def run_args(path: str, args: list[str]):
     """
     command = ["python", path]
     command += args
-    return do(command=command)
+    result = do(command=command)
+    return result
 
 
 def do(command: list) -> (str, str):
