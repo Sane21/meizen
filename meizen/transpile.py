@@ -22,10 +22,33 @@ def build(path: str, filename: str):
     :param filename: 読み取るファイル名 (拡張子は除く)
     :return:
     """
+    print(":----------翻訳を開始します----------:")
     compile_code(path=path, filename=filename)
 
 
 def run(path: str, filename: str) -> (str, str):
+    """
+    DNCLからPythonへの翻訳-実行関数
+    pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成し、filename.pyを実行する
+    処理はdoに委譲
+    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
+    :param filename: 読み取るファイル名 (拡張子は除く)
+    :return:
+    """
+    do(path=path, filename=filename)
+
+
+def make_run(path: str, filename: str):
+    """
+    legacy : 処理はrunに委譲
+    pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成し、filename.pyを実行する
+    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
+    :param filename: 読み取るファイル名 (拡張子は除く)
+    """
+    run(path, filename)
+
+
+def do(path: str, filename: str) -> (str, str):
     """
     DNCLからPythonへの翻訳-実行関数
     pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成し、filename.pyを実行する
@@ -39,16 +62,6 @@ def run(path: str, filename: str) -> (str, str):
     return result
 
 
-def make_run(path: str, filename: str):
-    """
-    legacy : 処理はrunに委譲
-    pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成し、filename.pyを実行する
-    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
-    :param filename: 読み取るファイル名 (拡張子は除く)
-    """
-    run(path, filename)
-
-
 def exam_re(path: str, filename: str, answer: str):
     """
     変換と実行、実行結果の正規表現による確認まで行う関数
@@ -58,7 +71,7 @@ def exam_re(path: str, filename: str, answer: str):
     :param answer: 確認する正規表現
     :return:
     """
-    out, _ = run(path=path, filename=filename)
+    out, _ = do(path=path, filename=filename)
     result: bool = check_re(sentence=out, pattern=answer)
     print(":----------出力を確認します----------:")
     if result:
@@ -78,7 +91,7 @@ def exam_str(path: str, filename: str, answer: str):
     :param answer: 確認する文字列
     :return:
     """
-    out, _ = run(path=path, filename=filename)
+    out, _ = do(path=path, filename=filename)
     result: bool = check_str(sentence=out, string=answer)
     print(":----------出力を確認します----------:")
     if result:
