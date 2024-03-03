@@ -4,6 +4,12 @@ from .symbol import Symbol
 
 # トランスコンパイル
 def compile_code(path: str, filename: str):
+    """
+    pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成する
+    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
+    :param filename: 読み取るファイル名 (拡張子は除く)
+    :return:
+    """
     read_file_path = path + filename + ".dncl"
     write_file_path = path + filename + ".py"
     code_word, code_symbol = lexical_analyse(path=read_file_path)
@@ -16,6 +22,12 @@ def compile_code(path: str, filename: str):
 
 # 字句解析
 def lexical_analyse(path: str) -> (list, list):
+    """
+    字句解析関数
+    pathのファイルを読み取り、字句解析して単語ごとに切り分け、単語とSymbolのlistで返す
+    :param path: 解析する.dnclファイルのパス
+    :return: 字句解析した結果の単語のリスト, Symbolのリスト
+    """
     code_list: list = load(path=path)
     # ここから 最後の１行を構文解析できないことのケアとして空行を追加する処理
     code_list[len(code_list) - 1] += "\n"
@@ -491,6 +503,13 @@ def lexical_analyse(path: str) -> (list, list):
 
 # 構文解析
 def parse(code_word: list, code_symbol: list) -> list:
+    """
+    構文解析関数
+    引数に字句解析の結果を受け取り、解析してPythonに再生成したプログラムを行ごとに格納したlistを返す
+    :param code_word: 字句解析結果の単語のlist
+    :param code_symbol: 字句解析結果のSymbolのlist
+    :return: 生成したPythonのコードを1行ごとに格納したlist
+    """
     code_list: list[str] = []  # 各行を格納するリスト
     word_num = len(code_word)  # 単語の格納数
     symbol_num = len(code_symbol)  # 記号の格納数
@@ -621,11 +640,26 @@ def parse(code_word: list, code_symbol: list) -> list:
 
 # 追加する
 def append(code_word: list, code_symbol: list, word: str, symbol: Symbol):
+    """
+    wordのlistとsymbolのlistの両方に対応する情報を追加する処理
+    字句解析中に使用
+    :param code_word: wordのlist
+    :param code_symbol: symbolのlist
+    :param word: 追加するword
+    :param symbol: 追加するlist
+    :return:
+    """
     code_word.append(word)
     code_symbol.append(symbol)
 
 
 def is_symbol_head_character(character: str) -> bool:
+    """
+    引数の文字が記号の頭文字かどうかを判別する関数
+    新しい記号や予約語を追加する場合は、対応する字句解析や構文解析に加えてここも編集すること
+    :param character: 判別したい文字
+    :return: 頭文字か否か
+    """
     result = False
     key_list = ["\n", " ", "\t", ",", ".", "(", ")", "[", "]", "+", "-", "*", "/", "%", "=", "<", ">", "!", "&", "|",
                 "\"", "\0", ";", ":", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "「", "」", "←"]
@@ -638,6 +672,11 @@ def is_symbol_head_character(character: str) -> bool:
 
 # 文字が数値かどうかを判別
 def is_number_character(character: str) -> bool:
+    """
+    引数の文字がアラビア数字がどうかを判別する関数
+    :param character: 判定したい文字
+    :return: アラビア数字か否か
+    """
     result = False
     if character == "0" or character == "1" or character == "2" or character == "3" \
             or character == "4" or character == "5" or character == "6" or character == "7" \
@@ -650,6 +689,12 @@ def is_number_character(character: str) -> bool:
 
 # 文字列が数値かどうかを判別
 def is_number(word: str) -> bool:
+    """
+    引数の文字列が数値かどうかを判別する関数
+    浮動小数点数少数として扱えるかどうかを判別の基準としている
+    :param word: 判別したい文字列
+    :return: 数値か否か
+    """
     try:
         float(word)
     except ValueError:
@@ -659,6 +704,12 @@ def is_number(word: str) -> bool:
 
 
 def is_name(word: str) -> bool:
+    """
+    未実装
+    引数の文字列が変数名として許容可能かどうかを判別する関数
+    :param word: 判別したい文字列
+    :return: 変数名か否か
+    """
     result = True
     # result = False
     # for character in word:
@@ -672,6 +723,13 @@ def is_name(word: str) -> bool:
 
 # 次の文字に進む
 def next_to(line: list, pos: int) -> (int, str, str):
+    """
+    文字送り関数
+    字句解析中で使用
+    :param line: 判定中の行
+    :param pos: 判定中の位置
+    :return: int判定箇所, str現在の文字, str次の文字
+    """
     pos += 1
     current_char = line[pos]
     next_char = line[pos + 1]

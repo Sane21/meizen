@@ -1,4 +1,7 @@
 class Symbol:
+    """
+    字句の種類を示すclass, enumみたいな運用
+    """
     # 初期値
     NULL = "NONE"
     # 解析中

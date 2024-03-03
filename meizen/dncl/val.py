@@ -2,6 +2,10 @@
 # ValueTableクラス, Valueの一覧を保持,addressの使用状況を管理, 使用可能なaddressを返却
 from .type import ValueType
 
+# 現在は未使用
+# より厳密な解析をする場合に使用する,
+# 内容は未検証なため採用時には仕様の再検討とユニットテストは不可欠
+
 
 class Value:
     """

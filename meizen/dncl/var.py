@@ -1,6 +1,10 @@
 from .type import NameType
 from abc import ABC, abstractmethod
 
+# 現在は未使用
+# より厳密な解析をする場合に使用する,
+# 内容は未検証なため採用時には仕様の再検討とユニットテストは不可欠
+
 
 class Variable:
     """変数クラス
