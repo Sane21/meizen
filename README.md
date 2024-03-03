@@ -23,15 +23,19 @@ pip install git+https://github.com/Sane21/meizen.git
 次のコードで{filename}.dnclのDNCL2で記述したファイルをPythonのファイルにトランスパイルすることができる。
 ```
 meizen.make(path, filename)
+meizen.build(path, filename)
 ```
 また、次のコードではトランスパイルから実行までを一括で行うことができる。
 ```
 meizen.make_run(path, filename)
+meizen.run(path, filename)
 ```
 
 pathには読み取りたいDNCLファイルのあるフォルダを記述する
 filenameには読み取りたいDNCLファイルの名前を記述する ただし拡張子は不要
 実行すると、pathのフォルダ内に{filename}.pyが生成される。元からある場合は上書きされる。
+
+※ 2024/03/01 makeは負けを連想させて不適かなと判断し、build, runでも動作するようにしました。従来のコマンドも変わらず動作はします。
 
 本プロジェクトのmeizen/dncl/sample内にサンプルプログラムが存在する。
 
