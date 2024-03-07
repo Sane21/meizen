@@ -12,7 +12,7 @@ class Symbol:
     THEN = "ならば"
     ELIF = "そうでなくもし"
     ELSE = "そうでなければ"
-    WHILE = "の間"
+    WHILE = "の間繰り返す"
     BREAK = "break"
     CONTINUE = "continue"
     FOR_L = "を"
