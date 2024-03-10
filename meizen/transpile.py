@@ -50,7 +50,7 @@ def compile_code(path: str, filename: str):
     logger("書き込み完了")
 
 
-def run(path: str, filename: str) -> (str, str):
+def run(filename: str, path: str = "./") -> (str, str):
     """
     DNCLからPythonへの翻訳-実行関数
     pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成し、filename.pyを実行する
@@ -86,7 +86,7 @@ def do(path: str, filename: str) -> (str, str):
     return result
 
 
-def exam_re(path: str, filename: str, answer: str):
+def exam_re(answer: str, filename: str, path: str = "./"):
     """
     変換と実行、実行結果の正規表現による確認まで行う関数
     python標準のreパッケージのfullmatchに基づく
@@ -106,7 +106,7 @@ def exam_re(path: str, filename: str, answer: str):
     logger(":-----------確認は以上です-----------:")
 
 
-def exam_str(path: str, filename: str, answer: str):
+def exam_str(answer: str, filename: str, path: str = "./"):
     """
     変換と実行、実行結果の文字列による確認まで行う関数
     完全一致のみを正答とする
