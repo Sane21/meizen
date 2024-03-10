@@ -10,6 +10,6 @@ setup(
     author="Keita Sanefuji",
     author_email="sane21.edu@gmail.com",
     url="https://github.com/sane21/meizen",
-    license="MIT",
+    license="GPL-3.0",
     packages=find_packages()
 )
