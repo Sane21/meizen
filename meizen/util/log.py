@@ -26,7 +26,7 @@ class Logger:
         :param user: USERの識別子を記入
         """
         self._user = user
-        self._date = str(datetime.UTC)
+        self._date = str(datetime.datetime.now())
         self.__filename__ = "log_" + self._user + "_" + self._date + ".md"
         content = ["# " + self._user, ""]
         write(path="./" + self.__filename__, code_list=content)
