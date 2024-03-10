@@ -56,7 +56,7 @@ class Logger:
         """
         self._py = ""
         for code in code_list:
-            self._py += code + "\n"
+            self._py += code + "\n\n"
         logger(msg=msg)
 
     def std_out(self, msg: str, code: str):
@@ -83,20 +83,20 @@ class Logger:
 
     def dump(self, path="./"):
         self._date = str(datetime.datetime.now())
-        content = ["## " + self._date,
-                   "'''dncl",
+        content = ["## " + self._date + "\n",
+                   "'''dncl" + "\n",
                    self._dncl,
-                   "'''",
-                   "'''py",
+                   "'''" + "\n",
+                   "'''py" + "\n",
                    self._py,
-                   "'''"]
+                   "'''" + "\n"]
         if self._std_out is not "None":
-            content += ["'''std_out",
-                        self._std_out,
-                        "'''",
-                        "'''err_out",
-                        self._err_out,
-                        "'''"]
+            content += ["'''std_out" + "\n",
+                        self._std_out + "\n",
+                        "'''" + "\n",
+                        "'''err_out" + "\n",
+                        self._err_out + "\n",
+                        "'''" + "\n"]
         write(path=path + self.__filename__, mode="a", code_list=content)
 
     def get_file(self) -> str:
