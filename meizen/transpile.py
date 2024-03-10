@@ -56,7 +56,7 @@ def compile_code(path: str, filename: str, log: Logger = None):
     if log is None:
         logger("書き込み完了")
     else:
-        log.dncl(msg="書き込み完了", code_list=code_list)
+        log.py(msg="書き込み完了", code_list=code_list)
     if log is not None:
         log.dump(path=path)
 
