@@ -1,4 +1,3 @@
-from meizen.util.io import load, write
 from meizen.util.log import logger
 from .symbol import Symbol
 
