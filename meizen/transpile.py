@@ -107,7 +107,7 @@ def do(path: str, filename: str, log: Logger = None) -> (str, str):
             logger(":-------------エラー出力------------:")
             logger(err)
         else:
-            log.std_out(msg=":-------------エラー出力------------:", code=err)
+            log.err_out(msg=":-------------エラー出力------------:", code=err)
     logger(":------------実行しました-----------:")
     if log is not None:
         log.dump(path=path)
