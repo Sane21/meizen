@@ -3,37 +3,15 @@ from meizen.util.log import logger
 from .symbol import Symbol
 
 
-# トランスコンパイル
-def compile_code(path: str, filename: str):
-    """
-    pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成する
-    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
-    :param filename: 読み取るファイル名 (拡張子は除く)
-    :return:
-    """
-    read_file_path = path + filename + ".dncl"
-    write_file_path = path + filename + ".py"
-    code_word, code_symbol = lexical_analyse(path=read_file_path)
-    logger("字句解析完了")
-    code_list = parse(code_word=code_word, code_symbol=code_symbol)
-    logger("構文解析完了")
-    write(path=write_file_path, code_list=code_list)
-    logger("書き込み完了")
-
-
 # 字句解析
-def lexical_analyse(path: str) -> (list, list):
+def lexical_analyse(code_list: list) -> (list, list):
     """
     字句解析関数
     pathのファイルを読み取り、字句解析して単語ごとに切り分け、単語とSymbolのlistで返す
-    :param path: 解析する.dnclファイルのパス
+    :param code_list: 解析するコードの配列
     :return: 字句解析した結果の単語のリスト, Symbolのリスト
     """
-    code_list: list = load(path=path)
-    # ここから 最後の１行を構文解析できないことのケアとして空行を追加する処理
-    code_list[len(code_list) - 1] += "\n"
-    code_list.append("")
-    # ここまで 消しちゃだめ
+
     code_word: list = []
     code_symbol: list = []
     len_line = len(code_list)  # 行数
