@@ -36,12 +36,4 @@ def do(command: list) -> (str, str):
     result = subprocess.run(command, shell=False, capture_output=True, text=True)
     output = result.stdout
     err = result.stderr
-    print(":----------処理を実行します----------:")
-    print("実行コマンド : " + str(command))
-    print(":--------------標準出力-------------:")
-    print(output)
-    if err is not "":
-        print(":-------------エラー出力------------:")
-        print(err)
-    print(":------------実行しました-----------:")
     return output, err
