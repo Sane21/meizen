@@ -96,7 +96,7 @@ def do(path: str, filename: str, log: Logger = None) -> (str, str):
     :param filename: 読み取るファイル名 (拡張子は除く)
     :return: 実行結果の標準出力, エラー出力
     """
-    build(path=path, filename=filename, log=log)
+    compile_code(path=path, filename=filename, log=log)
     std, err = util_run(path=path + filename + ".py")
     logger(":----------処理を実行します----------:")
     if log is None:
