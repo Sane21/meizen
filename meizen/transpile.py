@@ -1,7 +1,8 @@
-from .dncl.lexer import compile_code
+from .dncl.lexer import lexical_analyse, parse
 from .util.run import run as util_run
 from .util.regEx import check_str, check_re
 from .util.log import logger
+from .util.io import load, write
 
 
 def make(path: str, filename: str):
@@ -15,16 +16,38 @@ def make(path: str, filename: str):
     build(path, filename)
 
 
-def build(path: str, filename: str):
+def build(filename: str, path: str = "./"):
     """
     DNCLからPythonへの翻訳関数
     pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成する
-    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
+    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス (default:"./")
     :param filename: 読み取るファイル名 (拡張子は除く)
     :return:
     """
     logger(":----------翻訳を開始します----------:")
     compile_code(path=path, filename=filename)
+
+
+def compile_code(path: str, filename: str):
+    """
+    pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成する
+    :param path: 読み取りファイルと書き込みファイルの存在するディレクトリ(フォルダ)のパス
+    :param filename: 読み取るファイル名 (拡張子は除く)
+    :return:
+    """
+    read_file_path = path + filename + ".dncl"
+    write_file_path = path + filename + ".py"
+    code_list: list = load(path=read_file_path)
+    # ここから 最後の１行を構文解析できないことのケアとして空行を追加する処理
+    code_list[len(code_list) - 1] += "\n"
+    code_list.append("")
+    # ここまで 消しちゃだめ
+    code_word, code_symbol = lexical_analyse(code_list=code_list)
+    logger("字句解析完了")
+    code_list = parse(code_word=code_word, code_symbol=code_symbol)
+    logger("構文解析完了")
+    write(path=write_file_path, code_list=code_list)
+    logger("書き込み完了")
 
 
 def run(path: str, filename: str) -> (str, str):
