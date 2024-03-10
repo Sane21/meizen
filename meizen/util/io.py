@@ -13,15 +13,16 @@ def load(path: str) -> list:
 
 
 # 書き込み
-def write(path: str, code_list: list[str]):
+def write(path: str, code_list: list[str], mode="w"):
     """
     書き込み関数
-    pathのファイルが存在していれば上書きし、なければ作成し書き込む
+    pathのファイルが存在している場合の挙動はmodeで設定する(初期値は上書き)
     :param path: ファイルのパス
     :param code_list: 書き込む内容(1行ごと)
+    :param mode: 書き込みモードの選択 追記ならa
     :return: なし
     """
-    file = open(path, 'w', encoding="utf-8")
+    file = open(path, mode=mode, encoding="utf-8")
     for code in code_list:
         file.write(code+"\n")
         # print(code)
