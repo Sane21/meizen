@@ -84,13 +84,14 @@ class Logger:
                    "'''",
                    "'''py",
                    self._py,
-                   "'''",
-                   "'''std_out",
-                   self._std_out,
-                   "'''",
-                   "'''err_out",
-                   self._err_out,
                    "'''"]
+        if self._std_out is not None:
+            content += ["'''std_out",
+                        self._std_out,
+                        "'''",
+                        "'''err_out",
+                        self._err_out,
+                        "'''"]
 
         write(path=path + self.__filename__, mode="a", code_list=content)
 
