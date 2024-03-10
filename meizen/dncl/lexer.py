@@ -1,4 +1,5 @@
-from .io import load, write
+from meizen.util.io import load, write
+from meizen.util.log import logger
 from .symbol import Symbol
 
 
@@ -13,11 +14,11 @@ def compile_code(path: str, filename: str):
     read_file_path = path + filename + ".dncl"
     write_file_path = path + filename + ".py"
     code_word, code_symbol = lexical_analyse(path=read_file_path)
-    print("字句解析完了")
+    logger("字句解析完了")
     code_list = parse(code_word=code_word, code_symbol=code_symbol)
-    print("構文解析完了")
+    logger("構文解析完了")
     write(path=write_file_path, code_list=code_list)
-    print("書き込み完了")
+    logger("書き込み完了")
 
 
 # 字句解析
