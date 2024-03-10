@@ -26,6 +26,8 @@ def build(filename: str, path: str = "./", log: Logger = None):
     :return:
     """
     compile_code(path=path, filename=filename, log=log)
+    if log is not None:
+        log.dump(path=path)
 
 
 def compile_code(path: str, filename: str, log: Logger = None):
@@ -57,8 +59,6 @@ def compile_code(path: str, filename: str, log: Logger = None):
         logger("書き込み完了")
     else:
         log.py(msg="書き込み完了", code_list=code_list)
-    if log is not None:
-        log.dump(path=path)
 
 
 def run(filename: str, path: str = "./", log=None) -> (str, str):
@@ -72,6 +72,8 @@ def run(filename: str, path: str = "./", log=None) -> (str, str):
     :return:
     """
     do(path=path, filename=filename, log=log)
+    if log is not None:
+        log.dump(path=path)
 
 
 def make_run(path: str, filename: str):
@@ -109,12 +111,10 @@ def do(path: str, filename: str, log: Logger = None) -> (str, str):
         else:
             log.err_out(msg=":-------------エラー出力------------:", code=err)
     logger(":------------実行しました-----------:")
-    if log is not None:
-        log.dump(path=path)
     return std, err
 
 
-def exam_re(answer: str, filename: str, path: str = "./", log=None):
+def exam_re(answer: str, filename: str, path: str = "./", log: Logger = None):
     """
     変換と実行、実行結果の正規表現による確認まで行う関数
     python標準のreパッケージのfullmatchに基づく
@@ -133,9 +133,11 @@ def exam_re(answer: str, filename: str, path: str = "./", log=None):
         logger("出力に不備があります.想定される出力は次の通りです.")
         logger(answer)
     logger(":-----------確認は以上です-----------:")
+    if log is not None:
+        log.dump(path=path)
 
 
-def exam_str(answer: str, filename: str, path: str = "./", log=None):
+def exam_str(answer: str, filename: str, path: str = "./", log: Logger = None):
     """
     変換と実行、実行結果の文字列による確認まで行う関数
     完全一致のみを正答とする
@@ -154,3 +156,5 @@ def exam_str(answer: str, filename: str, path: str = "./", log=None):
         logger("出力に不備があります.想定される出力は次の通りです.")
         logger(answer)
     logger(":-----------確認は以上です-----------:")
+    if log is not None:
+        log.dump(path=path)
