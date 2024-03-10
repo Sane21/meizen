@@ -16,7 +16,7 @@ def make(path: str, filename: str):
     build(path, filename)
 
 
-def build(filename: str, path: str = "./", log=None):
+def build(filename: str, path: str = "./", log: Logger = None):
     """
     DNCLからPythonへの翻訳関数
     pathフォルダ内に存在するfilename.dnclを読み取り、同フォルダ内にfilename.pyを作成する
@@ -57,6 +57,8 @@ def compile_code(path: str, filename: str, log: Logger = None):
         logger("書き込み完了")
     else:
         log.dncl(msg="書き込み完了", code_list=code_list)
+    if log is None:
+        log.dump(path=path)
 
 
 def run(filename: str, path: str = "./", log=None) -> (str, str):
@@ -107,6 +109,8 @@ def do(path: str, filename: str, log: Logger = None) -> (str, str):
         else:
             log.std_out(msg=":-------------エラー出力------------:", code=err)
     logger(":------------実行しました-----------:")
+    if log is None:
+        log.dump(path=path)
     return std, err
 
 
