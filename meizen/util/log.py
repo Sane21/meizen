@@ -28,7 +28,7 @@ class Logger:
         self._user = user
         self._date = str(datetime.datetime.now())
         self.__filename__ = "log_" + self._user + "_" + self._date + ".md"
-        content = ["# " + self._user, ""]
+        content = ["# " + self._user, self._date]
         write(path="./" + self.__filename__, code_list=content)
         self._dncl = "None"
         self._py = "None"
@@ -82,6 +82,7 @@ class Logger:
         logger(msg=code)
 
     def dump(self, path="./"):
+        self._date = str(datetime.datetime.now())
         content = ["## " + self._date,
                    "'''dncl",
                    self._dncl,
