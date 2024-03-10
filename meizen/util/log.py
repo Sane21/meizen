@@ -84,19 +84,19 @@ class Logger:
     def dump(self, path="./"):
         self._date = str(datetime.datetime.now())
         content = ["## " + self._date + "\n",
-                   "'''dncl" + "\n",
+                   "```dncl" + "\n",
                    self._dncl,
-                   "'''" + "\n",
-                   "'''py" + "\n",
+                   "```" + "\n",
+                   "```py" + "\n",
                    self._py,
-                   "'''" + "\n"]
+                   "```" + "\n"]
         if self._std_out is not "None":
-            content += ["'''std_out" + "\n",
+            content += ["```std_out" + "\n",
                         self._std_out + "\n",
-                        "'''" + "\n",
-                        "'''err_out" + "\n",
+                        "```" + "\n",
+                        "```err_out" + "\n",
                         self._err_out + "\n",
-                        "'''" + "\n"]
+                        "```" + "\n"]
         write(path=path + self.__filename__, mode="a", code_list=content)
 
     def get_file(self) -> str:
