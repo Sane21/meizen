@@ -30,6 +30,10 @@ class Logger:
         self.__filename__ = "log_" + self._user + "_" + self._date + ".md"
         content = ["# " + self._user, ""]
         write(path="./" + self.__filename__, code_list=content)
+        self._dncl = "None"
+        self._py = "None"
+        self._std_out = "None"
+        self._err_out = "None"
 
     def dncl(self, msg: str, code_list: list[str]):
         """
@@ -85,7 +89,7 @@ class Logger:
                    "'''py",
                    self._py,
                    "'''"]
-        if self._std_out is not None:
+        if self._std_out is not "None":
             content += ["'''std_out",
                         self._std_out,
                         "'''",
