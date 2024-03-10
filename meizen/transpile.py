@@ -57,7 +57,7 @@ def compile_code(path: str, filename: str, log: Logger = None):
         logger("書き込み完了")
     else:
         log.dncl(msg="書き込み完了", code_list=code_list)
-    if log is None:
+    if log is not None:
         log.dump(path=path)
 
 
@@ -109,7 +109,7 @@ def do(path: str, filename: str, log: Logger = None) -> (str, str):
         else:
             log.std_out(msg=":-------------エラー出力------------:", code=err)
     logger(":------------実行しました-----------:")
-    if log is None:
+    if log is not None:
         log.dump(path=path)
     return std, err
 
