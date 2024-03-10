@@ -25,6 +25,6 @@ def write(path: str, code_list: list[str], mode="w"):
     file = open(path, mode=mode, encoding="utf-8")
     for code in code_list:
         file.write(code+"\n")
-        # print(code)
+        print(code)
     file.close()
     return

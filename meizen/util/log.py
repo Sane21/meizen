@@ -97,8 +97,6 @@ class Logger:
                         "'''err_out",
                         self._err_out,
                         "'''"]
-        print(content)
-
         write(path=path + self.__filename__, mode="a", code_list=content)
 
     def get_file(self) -> str:
