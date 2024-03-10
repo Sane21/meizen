@@ -1,4 +1,4 @@
-from meizen.dncl.io import load, write
+from meizen.util.io import load, write
 
 
 def test_load():

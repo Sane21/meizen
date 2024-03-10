@@ -1,6 +1,7 @@
 from .dncl.lexer import compile_code
 from .util.run import run as util_run
 from .util.regEx import check_str, check_re
+from .util.log import logger
 
 
 def make(path: str, filename: str):
@@ -22,7 +23,7 @@ def build(path: str, filename: str):
     :param filename: 読み取るファイル名 (拡張子は除く)
     :return:
     """
-    print(":----------翻訳を開始します----------:")
+    logger(":----------翻訳を開始します----------:")
     compile_code(path=path, filename=filename)
 
 
@@ -73,13 +74,13 @@ def exam_re(path: str, filename: str, answer: str):
     """
     out, _ = do(path=path, filename=filename)
     result: bool = check_re(sentence=out, pattern=answer)
-    print(":----------出力を確認します----------:")
+    logger(":----------出力を確認します----------:")
     if result:
-        print("出力は正常です.")
+        logger("出力は正常です.")
     else:
-        print("出力に不備があります.想定される出力は次の通りです.")
-        print(answer)
-    print(":-----------確認は以上です-----------:")
+        logger("出力に不備があります.想定される出力は次の通りです.")
+        logger(answer)
+    logger(":-----------確認は以上です-----------:")
 
 
 def exam_str(path: str, filename: str, answer: str):
@@ -93,10 +94,10 @@ def exam_str(path: str, filename: str, answer: str):
     """
     out, _ = do(path=path, filename=filename)
     result: bool = check_str(sentence=out, string=answer)
-    print(":----------出力を確認します----------:")
+    logger(":----------出力を確認します----------:")
     if result:
-        print("出力は正常です.")
+        logger("出力は正常です.")
     else:
-        print("出力に不備があります.想定される出力は次の通りです.")
-        print(answer)
-    print(":-----------確認は以上です-----------:")
+        logger("出力に不備があります.想定される出力は次の通りです.")
+        logger(answer)
+    logger(":-----------確認は以上です-----------:")
